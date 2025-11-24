@@ -1,0 +1,73 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class ToDoApp extends JFrame {
+
+    private DefaultListModel<String> taskModel;
+    private JList<String> taskList;
+    private JTextField taskField;
+    private JButton addButton, deleteButton;
+
+    public ToDoApp() {
+        setTitle("To-Do List App");
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // center window
+
+        // Create components
+        taskModel = new DefaultListModel<>();
+        taskList = new JList<>(taskModel);
+        taskField = new JTextField();
+        addButton = new JButton("Add Task");
+        deleteButton = new JButton("Delete Task");
+
+        // Layout
+        setLayout(new BorderLayout());
+
+        // Top panel (input + add button)
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(taskField, BorderLayout.CENTER);
+        topPanel.add(addButton, BorderLayout.EAST);
+
+        // Bottom panel (delete button)
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(deleteButton);
+
+        // Add components to frame
+        add(topPanel, BorderLayout.NORTH);
+        add(new JScrollPane(taskList), BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Add button action
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String task = taskField.getText().trim();
+                if (!task.isEmpty()) {
+                    taskModel.addElement(task);
+                    taskField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter a task!");
+                }
+            }
+        });
+
+        // Delete button action
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = taskList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    taskModel.remove(selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a task to delete!");
+                }
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        new ToDoApp().setVisible(true);
+    }
+}
